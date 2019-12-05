@@ -110,7 +110,7 @@ class Blockchain(object):
         """
         guess = f'{block_string}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
-
+        
         return guess_hash[:6] == "0" * 6
         # return True or False
 
@@ -128,7 +128,7 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['POST'])
 def mine():
     data = request.get_json()
-
+  
 
     if not 'proof' and 'id':
         return 'A proof and an ID are needed to attempt to mine', 400
@@ -136,19 +136,18 @@ def mine():
     block = blockchain.last_block
     proof = data.get('proof')
 
-    block_string = json.dumps(block, sort_keys=True).encode()
+    block_string = json.dumps(block, sort_keys=True)
 
     if blockchain.valid_proof(block_string ,proof ):
         
     # # Run the proof of work algorithm to get the next proof
-    # new_proof = blockchain.proof_of_work(blockchain.last_block)
     # # Forge the new Block by adding it to the chain with the proof
-    # previous_hash = blockchain.hash(blockchain.last_block)
-    # block = blockchain.new_block(proof, previous_hash)
+        previous_hash = blockchain.hash(blockchain.last_block)
+        new_block = blockchain.new_block(proof, previous_hash)
 
         response = {
         # TODO: Send a JSON response with the new block
-        # 'block' : new_block
+        'block' : new_block,
         'message': 'New Block Forged'
         }
 
