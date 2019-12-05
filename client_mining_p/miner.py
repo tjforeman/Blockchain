@@ -38,7 +38,7 @@ def valid_proof(block_string, proof):
     guess = f'{block_string}{proof}'.encode()
     guess_hash = hashlib.sha256(guess).hexdigest()
 
-    return guess_hash[:6] == "0" * 6
+    return guess_hash[:2] == "0" * 2
 
 
 if __name__ == '__main__':
@@ -56,8 +56,9 @@ if __name__ == '__main__':
     coins_mined = 0
     # Run forever until interrupted
     while True:
-        print('starting')
+        
         r = requests.get(url=node + "/last_block")
+        print('starting')
         # Handle non-json response
         try:
             data = r.json()
@@ -97,4 +98,4 @@ if __name__ == '__main__':
         if data['message'] == "New Block Forged":
             coins_mined +=1
 
-        print(coins_mined)
+        print(f'coins mined: {coins_mined}')
