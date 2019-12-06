@@ -9,6 +9,11 @@ from time import time
 from uuid import uuid4
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
+app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 
 class Blockchain(object):
@@ -174,7 +179,7 @@ def mine():
         previous_hash = blockchain.hash(blockchain.last_block)
         new_block = blockchain.new_block(proof, previous_hash)
 
-        blockchain.new_transaction('0', data['id'], 1)
+        # blockchain.new_transaction('0', data['id'], 1)
         response = {
         # TODO: Send a JSON response with the new block
         'block' : new_block,
@@ -191,6 +196,7 @@ def mine():
 
 
 @app.route('/chain', methods=['GET'])
+@cross_origin()
 def full_chain():
     response = {
         # TODO: Return the chain and its current length
@@ -201,6 +207,7 @@ def full_chain():
 
 @app.route('/last_block', methods=['GET'])
 def return_last_block():
+
     last_block = blockchain.last_block
 
     response = {
